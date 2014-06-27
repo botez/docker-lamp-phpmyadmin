@@ -27,6 +27,11 @@ RUN printf admin\\nadmin\\n | passwd
 # Install MariaDB
 RUN apt-get install -y mariadb-server
 
+# Tweak my.cnf
+RUN sed -i -e 's/\(bind-address.*=\).*/\1 0.0.0.0/g' /etc/mysql/my.cnf
+RUN sed -i -e 's/\(log_error.*\)/#\1/g' /etc/mysql/my.cnf
+RUN sed -i -e 's/\(user.*=\).*/\1 nobody/g' /etc/mysql/my.cnf
+
 # Install Apache
 RUN apt-get install -y apache2
 # Install php
@@ -48,7 +53,7 @@ EXPOSE 3306
 
 VOLUME /db
 
-# Add mariadb to runit
-RUN mkdir /etc/service/mariadb
-ADD mariadb.sh /etc/service/mariadb/run
-RUN chmod +x /etc/service/mariadb/run
+# Add lamp-phpmyadmin to runit
+RUN mkdir /etc/service/lamp-phpmyadmin
+ADD lamp-phpmyadmin.sh /etc/service/lamp-phpmyadmin/run
+RUN chmod +x /etc/service/lamp-phpmyadmin/run
