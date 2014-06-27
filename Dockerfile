@@ -17,7 +17,7 @@ RUN apt-get update -q
 
 # Install sshd
 RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
+#RUN mkdir /var/run/sshd
 
 # Set password to 'admin'
 RUN printf admin\\nadmin\\n | passwd
