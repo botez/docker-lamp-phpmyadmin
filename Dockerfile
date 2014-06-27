@@ -1,9 +1,19 @@
-FROM ubuntu:12.04
+FROM phusion/baseimage:0.9.11
+MAINTAINER botez <troyolson1@gmail.com>
+ENV DEBIAN_FRONTEND noninteractive
 
-MAINTAINER Wei-Ming Wu <wnameless@gmail.com>
+# Set correct environment variables
+ENV HOME /root
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
+RUN usermod -u 99 nobody && \
+    usermod -g 100 nobody
+
+CMD ["/sbin/my_init"]
+
+RUN apt-get install software-properties-common
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+RUN add-apt-repository 'deb http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu trusty main'
+RUN apt-get update -q
 
 # Install sshd
 RUN apt-get install -y openssh-server
@@ -13,7 +23,10 @@ RUN mkdir /var/run/sshd
 RUN printf admin\\nadmin\\n | passwd
 
 # Install MySQL
-RUN apt-get install -y mysql-server mysql-client libmysqlclient-dev
+#RUN apt-get install -y mysql-server mysql-client libmysqlclient-dev
+# Install MariaDB
+RUN apt-get install -y mariadb-server
+
 # Install Apache
 RUN apt-get install -y apache2
 # Install php
@@ -33,6 +46,7 @@ EXPOSE 22
 EXPOSE 80
 EXPOSE 3306
 
-CMD mysqld_safe & \
-	service apache2 start; \
-	/usr/sbin/sshd -D
+# Add mariadb to runit
+RUN mkdir /etc/service/mariadb
+ADD mariadb.sh /etc/service/mariadb/run
+RUN chmod +x /etc/service/mariadb/run
