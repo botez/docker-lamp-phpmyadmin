@@ -46,6 +46,8 @@ EXPOSE 22
 EXPOSE 80
 EXPOSE 3306
 
+VOLUME /db
+
 # Add mariadb to runit
 RUN mkdir /etc/service/mariadb
 ADD mariadb.sh /etc/service/mariadb/run
