@@ -38,12 +38,7 @@ RUN apt-get install -y apache2
 RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
 
 # Install phpMyAdmin
-RUN mysqld & \
-	service apache2 start; \
-	sleep 5; \
-	printf y\\n\\n\\n1\\n | apt-get install -y phpmyadmin; \
-	sleep 15; \
-	mysqladmin -u root shutdown
+RUN apt-get install -y phpmyadmin
 
 RUN sed -i "s#// \$cfg\['Servers'\]\[\$i\]\['AllowNoPassword'\] = TRUE;#\$cfg\['Servers'\]\[\$i\]\['AllowNoPassword'\] = TRUE;#g" /etc/phpmyadmin/config.inc.php 
 
