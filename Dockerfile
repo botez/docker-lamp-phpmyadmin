@@ -53,6 +53,10 @@ EXPOSE 3306
 VOLUME /db
 
 # Add lamp-phpmyadmin to runit
-RUN mkdir /etc/service/lamp-phpmyadmin
-ADD lamp-phpmyadmin.sh /etc/service/lamp-phpmyadmin/run
-RUN chmod +x /etc/service/lamp-phpmyadmin/run
+#RUN mkdir /etc/service/lamp-phpmyadmin
+#ADD lamp-phpmyadmin.sh /etc/service/lamp-phpmyadmin/run
+#RUN chmod +x /etc/service/lamp-phpmyadmin/run
+CMD mysqld_safe --datadir='/db' &
+CMD service apache2 start
+CMD /usr/sbin/sshd -D
+
